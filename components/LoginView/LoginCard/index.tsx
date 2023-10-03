@@ -5,6 +5,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { clearUser, setUser } from "@/slices/user";
 import { useAppDispatch } from "@/slices/store";
 import Style from "./index.module.scss";
+import Dashboard from "@/components/DashBoard";
 
 const LoginCard = () => {
   const session = useSession();
@@ -39,12 +40,13 @@ const LoginCard = () => {
       )}
 
       {session.status === "authenticated" && (
-        <button onClick={handleSignOut}>
-          <div>
-            <FcGoogle />
-          </div>
-          <p> Logout</p>
-        </button>
+        <Dashboard />
+        // <button onClick={handleSignOut}>
+        //   <div>
+        //     <FcGoogle />
+        //   </div>
+        //   <p> Logout</p>
+        // </button>
       )}
     </div>
   );
