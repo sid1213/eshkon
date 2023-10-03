@@ -1,6 +1,7 @@
 // user type
 
 export interface User {
-  UserName: string;
-  email: string;
+  name?: string | undefined | null;
+  email?: string | undefined | null;
+  image?: string | undefined | null;
 }
