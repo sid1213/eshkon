@@ -1,52 +1,37 @@
 "use client";
 import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { clearUser, setUser } from "@/slices/user";
+import { signIn, useSession } from "next-auth/react";
+import { setUser } from "@/slices/user";
 import { useAppDispatch } from "@/slices/store";
 import Style from "./index.module.scss";
-import Dashboard from "@/components/DashBoard";
 
 const LoginCard = () => {
-  const session = useSession();
+  const session = useSession(); // A hook from next-auth to track login session
+  const router = useRouter(); // A hook for routing
+  const dispatch = useAppDispatch(); // Redux hook to dispatch action
 
-  const dispatch = useAppDispatch();
-
-  const handleSignIn = () => {
-    signIn("google");
-  };
-  const handleSignOut = () => {
-    signOut();
-    dispatch(clearUser());
+  const handleSignIn = async () => {
+    await signIn("google"); // function from next Auth to login from provider
   };
 
   useEffect(() => {
     if (session.status === "authenticated") {
       dispatch(setUser({ ...session.data.user }));
+      router.push("/dashboard");
     }
-    console.log(session);
-  }, [session, dispatch]);
+  }, [session, dispatch, router]);
 
   return (
     <div className={Style.main}>
-      {(session.status === "unauthenticated" ||
-        session.status === "loading") && (
-        <button onClick={handleSignIn} disabled={session.status === "loading"}>
+      {session.status === "unauthenticated" && (
+        <button onClick={handleSignIn}>
           <div>
             <FcGoogle />
           </div>
           <p> Sign in with Google</p>
         </button>
-      )}
-
-      {session.status === "authenticated" && (
-        <Dashboard />
-        // <button onClick={handleSignOut}>
-        //   <div>
-        //     <FcGoogle />
-        //   </div>
-        //   <p> Logout</p>
-        // </button>
       )}
     </div>
   );
